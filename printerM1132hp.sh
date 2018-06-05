@@ -12,11 +12,11 @@ sudo pacman -Syu
 echo -e "${green}Using pacaur or yaourt${NC}"
 pacman -Qqe | grep 'pacaur' &> /dev/null
 if [ $? == 0 ];then
-	echo -e "--Installing cups through pacaur"
-	pacaur -S cups cups-pdf cups-filters 
+	echo -e "--Installing cups  and hplip through pacaur"
+	pacaur -S cups cups-pdf cups-filters hplip
 else
-	echo -e "--Installing cups through yaourt"
-	yaourt -S cups cups-pdf cups-filters 
+	echo -e "--Installing cups and hplip through yaourt"
+	yaourt -S cups cups-pdf cups-filters hplip
 fi
 
 #enabling cups and adding user to group
@@ -27,7 +27,6 @@ sudo systemctl status org.cups.cupds
 sudo gpasswd -a $(whoami) lp
 sudo pacman -S foomatic-db foomatic-db-engine wget python-gobject 
 
-pacaur -S hplip
 
 printf '0\nd\ny\nm\ny\n\ny\n' | sudo  hp-setup -i 
 echo -e  "${green}PRINTER INSTALLED${NC}"
@@ -35,3 +34,7 @@ echo "Test page will be printed"
 echo "To remove a printer just run : sudo lpadmin -x PrinterName"
 echo "To manage printer and spooler  just access cups on: http://localhost:631/"
 
+#re-starting cups
+sudo systemctl restart org.cups.cupds
+#update system
+sudo pacman -Syuu
